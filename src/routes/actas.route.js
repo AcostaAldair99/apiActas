@@ -8,7 +8,11 @@ router.get("/certificates",verifyToken,actasController.getActas);
 
 router.post("/certificates",verifyToken,actasController.createActa);
 
-router.post("/certificates/:idActa",actasController.getActas);
+router.put("/certificates/:idActa",actasController.updateActa);
+
+router.delete("/certificates/:idActa",actasController.deleteActaById);
+
+router.get("/certificates/search/:idActa",actasController.searchActaById);
 
 
 export default router;

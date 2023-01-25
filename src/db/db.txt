@@ -1,0 +1,48 @@
+CREATE TABLE `actasdb`.`actas_sinoidales` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+    `actas_id` INT UNSIGNED NOT NULL,
+    `sinoidales_id` INT UNSIGNED NOT  NULL,
+    PRIMARY KEY (`id`))ENGINE=INNODB,
+  COMMENT = 'This Table is to store the relations between actas table and sinoidales table';
+
+
+ALTER TABLE `actasdb`.`actas_sinoidales` 
+ADD INDEX `fkactas_ids_idx` (`actas_id` ASC) VISIBLE;
+;
+ALTER TABLE `actasdb`.`actas_sinoidales` 
+ADD CONSTRAINT `fkactas_ids`
+  FOREIGN KEY (`actas_id`)
+  REFERENCES `actasdb`.`actas` (`idactas`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fksinoidales_ids`
+  FOREIGN KEY (`sinoidales_id`)
+  REFERENCES `actasdb`.`sinoidales` (`id_sinoidales`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  CREATE TABLE `actasdb`.`actas` (
+    `idactas` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `date_Creation` DATE NOT NULL,
+    `id_Folder` INT UNSIGNED NOT NULL,
+    `name_Student` VARCHAR(45) NOT NULL,
+    `id_Student` VARCHAR(45) NOT NULL,
+    `degree` VARCHAR(45) NOT NULL,
+    `degree_plan` INT NOT NULL,
+    `date_Limit` DATETIME NOT NULL,
+    PRIMARY KEY (`idactas`)
+	)ENGINE=INNODB,
+  COMMENT = 'This table store all data about the certificates';
+  
+    CREATE TABLE `actasdb`.`sinoidales` (
+    `id_sinoidales` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    `first_Name` VARCHAR(45) NOT NULL,
+    `second_Name` VARCHAR(45) NOT NULL,
+    `email` LONGTEXT NOT NULL,
+    `telephone` INT NOT NULL,
+    `area` LONGTEXT NOT NULL,
+    `disponibility` INT NOT NULL,
+    PRIMARY KEY (`id_sinoidales`))ENGINE=INNODB
+  COMMENT = 'This table is for the professors that sign the letters';
+      
