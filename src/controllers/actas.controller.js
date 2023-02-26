@@ -1,11 +1,10 @@
-import userModel from "../models/user";
 import { pool } from "../database";
 
 export const createActa = (req,res)=>{
-    var sql="INSERT INTO actas (date_Creation,id_Folder,name_Student,id_Student,degree,degree_plan,date_Limit) VALUES (? ,? ,? ,? ,? ,? ,?)"
+    var sql="INSERT INTO actas (date_Creation,id_Folder,name_Student,id_Student,degree,degree_plan,date_Limit,id_ceremony_fk) VALUES (? ,? ,? ,? ,? ,? ,?,?)"
     var data=req.body;
     try{
-        const saved=pool.query(sql,[data.date_Creation,data.id_Folder,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.date_Limit]);
+        const saved=pool.query(sql,[data.date_Creation,data.id_Folder,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.date_Limit,data.id_ceremony]);
         res.status(201).json({message:"Saved successfully"});
         //res.status(201).json(data[0]);
     }catch(error){
