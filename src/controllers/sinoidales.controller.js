@@ -32,3 +32,23 @@ export const updateSinoidal = async (req,res) =>{
         res.status(500).json(err);
     }
 }
+
+export const disActiveSinoidal = async (req,res) =>{
+    const {idSinoidal}=req.params;
+    const sql=isActive(req.body.active);
+    try{
+        const [quer]=pool.query(sql,[idSinoidal]);
+        if(quer.affectedRows === 0)return res.status(404).json({message:"Sinoidal not Found"});
+        res.status(201).json({message:"Sinoidal update successfully"});
+    }catch(err){
+        res.status(500).json({res:sql,err});
+    }
+}
+
+function isActive(data){
+    if(data){
+        return "UPDATE `sinoidales` SET `isActive` = isActive - 1 WHERE `id_sinoidales` = ?"
+    }else{
+        return "UPDATE `sinoidales` SET `isActive` = isActive + 1 WHERE `id_sinoidales` = ?"
+    }
+}

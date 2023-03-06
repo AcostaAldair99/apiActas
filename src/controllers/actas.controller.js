@@ -22,12 +22,40 @@ export const addSinoidalesActa = (req,res) =>{
     }
 }
 
+
+export const updateSinoidalActa = async (req,res) =>{
+    const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_sinoidales_fk` = ?"
+    var data=req.body;
+    const {idActa,idSinoidal}=req.params;
+    try{
+        const [qe]= await pool.query(sql,[data.id_sinoidales,idActa,idSinoidal]);
+        if(qe.affectedRows === 0 )return res.status(404).json({message:"Id Acta not Found"});
+        res.status(200).json({message:"Register Updated successfully"});
+    }catch(err){
+        res.status(500).json(err);
+    }
+}
+
 export const getActasSinoidales = async(req,res) =>{
     const [resp]=await pool.query("SELECT * FROM actas_sinoidales");
     if(resp.length === 0)return res.status(404).json({message:"Are not get sinoidales signing to any acta"});
     res.json(resp);
 }
 
+export const getActasSinoidalesById = async(req,res) =>{
+    const {idActa}=req.params;
+    const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_actas_fk=?",[idActa]);
+    if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
+    res.json(resp);
+}
+
+
+export const getActasSinoidalesBySinoidal = async(req,res) =>{
+    const {idSinoidal}=req.params;
+    const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_sinoidal_fk=?",[idSinoidal]);
+    if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
+    res.json(resp);
+}
 
 export const getActas = async(req,res)=>{
     const [respon]=await pool.query("SELECT * FROM actas");
@@ -35,24 +63,29 @@ export const getActas = async(req,res)=>{
     res.json(respon);
 };
 
-
-export const updateActa = async(req,res)=>{
-    res.json({message:"This is for update an Acta"})
+export const updateActaSignatures = async(req,res)=>{
+    const sql="UPDATE `actas` SET `signatures` = signatures + 1 WHERE id_actas=?";
+    const {idActa}=req.params;
+    try{
+        const [val]= await pool.query(sql,[idActa]);
+        if(val.affectedRows===0)return res.status(404).json({message:"Acta not found"});
+        res.status(201).json({message:"Acta updated Successfully a sinoidal got signed the acta"});
+    }catch(err){
+        res.status(500).json({message:"There is the limit for signatures",err});
+    }
 };
 
 
 export const deleteActaById = async (req,res)=>{
-    const [rows]=await pool.query("DELETE FROM actas WHERE idactas = ?",[req.params.idActa]);
-    if(rows.length<=0)return res.status(404).json({message:"error"});
-    res.status(201).json({message:"Acta deleted"})
+    try{
+        const [rows]=await pool.query("DELETE FROM actas WHERE id_actas = ?",[req.params.idActa]);
+        if(rows.length<=0)return res.status(404).json({message:"error"});
+        res.status(201).json({message:"Acta deleted !!"})
+    }catch(err){
+        res.status(500).json(err);
+    }
 }
 
-
-export const searchActaById = async(req,res)=>{
-    const [rows]=await pool.query("SELECT * FROM actas WHERE idactas = ?",[req.params.idActa]);
-    if(rows.length<=0)return res.status(404).json({message:"Acta not found"});
-    res.status(201).json(rows[0]);
-}
 
 
 
