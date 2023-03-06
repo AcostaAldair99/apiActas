@@ -1,21 +1,37 @@
 import { pool } from "../database";
 
-export const createActa = (req,res)=>{
-    var sql="INSERT INTO actas (date_Creation,id_Folder,name_Student,id_Student,degree,degree_plan,date_Limit,id_ceremony_fk) VALUES (? ,? ,? ,? ,? ,? ,?,?)"
+export const createActa = async (req,res)=>{
+    var sql="INSERT INTO actas SET id_Folder_fk=(SELECT id_folder FROM folder WHERE id_folder = ?), id_ceremony_fk=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_limit_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), name_Student=?,id_Student=?,degree=?,degree_plan=?,signatures=?";
     var data=req.body;
     try{
-        const saved=pool.query(sql,[data.date_Creation,data.id_Folder,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.date_Limit,data.id_ceremony]);
+        const saved= pool.query(sql,[data.id_Folder,data.id_ceremony,data.id_ceremony,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.signatures]);
         res.status(201).json({message:"Saved successfully"});
-        //res.status(201).json(data[0]);
     }catch(error){
-        console.log(error);
         return res.status(500).json(error);
     }
-
 }
+
+export const addSinoidalesActa = (req,res) =>{
+    const sql = "INSERT INTO actas_sinoidales SET id_ceremony=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), id_actas_fk=(SELECT id_actas FROM actas WHERE id_actas=?),id_sinoidales_fk=(SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?)"
+    const {idActa,idCeremony,idSinoidal}=req.params;
+    try{
+        const quer=pool.query(sql,[idCeremony,idCeremony,idActa,idSinoidal]);
+        res.status(201).json({message:"Set Sinoidal in Acta Successfully"});
+    }catch(err){    
+        res.status(500).json({message:err});
+    }
+}
+
+export const getActasSinoidales = async(req,res) =>{
+    const [resp]=await pool.query("SELECT * FROM actas_sinoidales");
+    if(resp.length === 0)return res.status(404).json({message:"Are not get sinoidales signing to any acta"});
+    res.json(resp);
+}
+
 
 export const getActas = async(req,res)=>{
     const [respon]=await pool.query("SELECT * FROM actas");
+    if(respon.length === 0 )return res.status(404).json({message:"Are not Actas Registered"});
     res.json(respon);
 };
 
