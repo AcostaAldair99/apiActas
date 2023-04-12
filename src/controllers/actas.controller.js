@@ -3,9 +3,12 @@ import { pool } from "../database";
 export const createActa = async (req,res)=>{
     var sql="INSERT INTO actas SET id_Folder_fk=(SELECT id_folder FROM folder WHERE id_folder = ?), id_ceremony_fk=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_limit_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), name_Student=?,id_Student=?,degree=?,degree_plan=?,signatures=?";
     var data=req.body;
+    const idInsert=null;
     try{
         const saved= pool.query(sql,[data.id_Folder,data.id_ceremony,data.id_ceremony,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.signatures]);
-        res.status(201).json({message:"Saved successfully"});
+        saved.then((result)=>{
+            res.status(201).json({actadata:result[0].insertId});
+        })
     }catch(error){
         return res.status(500).json(error);
     }
@@ -60,7 +63,7 @@ export const getActasSinoidalesBySinoidal = async(req,res) =>{
 export const getActas = async(req,res)=>{
     const [respon]=await pool.query("SELECT * FROM actas");
     if(respon.length === 0 )return res.status(404).json({message:"Are not Actas Registered"});
-    res.json(respon);
+    res.status(201).json(respon);
 };
 
 export const updateActaSignatures = async(req,res)=>{
