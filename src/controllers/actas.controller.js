@@ -1,16 +1,18 @@
 import { pool } from "../database";
 
 export const createActa = async (req,res)=>{
-    var sql="INSERT INTO actas SET id_Folder_fk=(SELECT id_folder FROM folder WHERE id_folder = ?), id_ceremony_fk=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_limit_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), name_Student=?,id_Student=?,degree=?,degree_plan=?,signatures=?";
+    var sql="INSERT INTO actas SET id_Folder_fk=(SELECT id_folder FROM folder WHERE id_folder = ?), id_ceremony_fk=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_limit_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), name_Student=?,lastName_Student=?,id_Student=?,degree=?,degree_plan=?,signatures=? ";
     var data=req.body;
     const idInsert=null;
     try{
-        const saved= pool.query(sql,[data.id_Folder,data.id_ceremony,data.id_ceremony,data.name_Student,data.id_Student,data.degree,data.degree_plan,data.signatures]);
+        const saved = pool.query(sql,[data.id_Folder,data.id_ceremony,data.id_ceremony,data.name_Student,data.lastName_Student,data.id_Student,data.degree,data.degree_plan,data.signatures]);
         saved.then((result)=>{
             res.status(201).json({actadata:result[0].insertId});
+            console.log("This is the result\n"+result);
         })
     }catch(error){
-        return res.status(500).json(error);
+        
+        return res.status(500).json({message:error});
     }
 }
 
@@ -47,9 +49,10 @@ export const getActasSinoidales = async(req,res) =>{
 
 export const getActasSinoidalesById = async(req,res) =>{
     const {idActa}=req.params;
+    console.log(idActa);
     const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_actas_fk=?",[idActa]);
     if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
-    res.json(resp);
+    res.status(201).json(resp);
 }
 
 

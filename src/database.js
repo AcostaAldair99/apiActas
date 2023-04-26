@@ -1,9 +1,11 @@
 import { createPool } from "mysql2/promise";
+require('dotenv').config()
+
 
 export const pool=createPool({
-    host:'localhost',
-    user:'root',
-    password:'YesterdaY1964a-',
-    port:3306,
-    database:'actasdb'
+    host:process.env.HOST,
+    user:process.env.USER,
+    password:process.env.PASSWORD,
+    port:process.env.PORT_DB,
+    database:process.env.DB
 })

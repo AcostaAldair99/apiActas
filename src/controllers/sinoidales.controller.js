@@ -21,6 +21,13 @@ export const createSinoidal = async(req,res)=>{
     }
 }
 
+export const getSinoidalById = async(req,res) => {
+    const {idSinoidal}=req.params;
+    const [data] = await pool.query('SELECT * FROM sinoidales WHERE id_sinoidales=?',[idSinoidal]);
+    if(data.affectedRows === 0 )res.status(404).json({message:"Sinoidal not found"});
+    res.status(201).json(data);
+}
+
 export const updateSinoidal = async (req,res) =>{
     var sql="UPDATE `sinoidales` SET `email` = ?, `telephone` = ? WHERE `id_sinoidales` = ?"
     var data=req.body;

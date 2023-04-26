@@ -21,8 +21,8 @@ export const updateCaseFolder =  async(req,res)=>{
 export const addActaToFolder = async(req,res) =>{
     const {id_folder} = req.params;
     try{
-        const [res] = await pool.query("UPDATE `folder` SET `actas_num` = actas_num + 1 WHERE `id_folder` = ?",[id_folder]);
-        if(res.affectedRows ===0)return res.status(404).json({message:"Folder not found"});
+        const [response] = await pool.query("UPDATE `folder` SET `actas_num` = actas_num + 1 WHERE id_folder = ?",[id_folder]);
+        if(response.affectedRows === 0)return res.status(404).json({message:"Folder not found"});
         res.status(201).json({message: "Acta added to Folder successfully"});
     }catch(err){
         res.status(500).json(err);
