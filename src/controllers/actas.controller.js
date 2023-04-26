@@ -27,6 +27,17 @@ export const addSinoidalesActa = (req,res) =>{
     }
 }
 
+export const updateActa = async (req,res) =>{
+    const sql = "UPDATE `actas` SET `id_ceremony_fk`=(SELECT id_ceremony FROM ceremony WHERE id_ceremony = ?),`id_folder_fk`=(SELECT id_folder FROM folder WHERE id_folder=?) WHERE `id_actas`=?";
+    var data = req.body;
+    try{
+        const [exe] = await pool.query(sql,[data.idCeremony,data.idFolder,req.params.idActa]);
+        if(exe.affectedRows === 0 )res.status(404).json({message:"Acta not found"});
+        res.status(201).json({message:"Acta update successfully"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
 
 export const updateSinoidalActa = async (req,res) =>{
     const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_sinoidales_fk` = ?"
@@ -92,7 +103,16 @@ export const deleteActaById = async (req,res)=>{
     }
 }
 
-
-
+export const deleteActaSinoidales = async (req,res) =>{
+    try{
+        const [data] =  await pool.query("DELETE FROM actas_sinoidales WHERE id_actas_fk=?",[req.params.idActa]);
+        if(data.affectedRows === 0 )res.status(404).json({message:"ACTA NOT FOUND"})    
+        res.status(201).json({message:"Acta deleted successfully"});
+    }catch(err){
+        res.status(500).json({message:err});
+    } 
+           
+}      
+        
 
 
