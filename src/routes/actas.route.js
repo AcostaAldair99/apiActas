@@ -13,7 +13,7 @@ router.delete("/certificates/:idActa",verifyToken,actasController.deleteActaById
 
 
 router.post("/certificates/addSinoidales/:idActa/:idCeremony/:idSinoidal",verifyToken,actasController.addSinoidalesActa);
-router.put("/certificates/updateSinoidales/:idActa/:idSinoidal",verifyToken,actasController.updateSinoidalActa);
+router.put("/certificates/updateActaSinoidales/:idActa",verifyToken,actasController.updateSinoidalActa);
 router.get("/certificates/reports",verifyToken,actasController.getActasSinoidales);
 router.get("/certificates/actasSinoidales/:idActa",verifyToken,actasController.getActasSinoidalesById)
 router.delete("/certificates/actasSinoidales/delete/:idActa",verifyToken,actasController.deleteActaSinoidales);

@@ -9,10 +9,10 @@ export const getSinoidales = async (req,res)=>{
 
 //Check validation for repeat sinoidales based on matricula
 export const createSinoidal = async(req,res)=>{
-    var sql="INSERT INTO sinoidales (first_Name,second_Name,email,telephone,area,id_professor,disponibility,isActive) VALUES (? ,? ,? ,? ,?,?,?,?)"
+    var sql="INSERT INTO sinoidales (first_Name,second_Name,area,id_professor,disponibility,isActive) VALUES (?,?,?,?,?,?)"
     var data=req.body;
     try{
-        const saved=pool.query(sql,[data.first_Name,data.second_Name,data.email,data.telephone,data.area,data.id_professor,data.disponibility,data.isActive]);
+        const saved=pool.query(sql,[data.first_Name,data.second_Name,data.area,data.id_professor,data.disponibility,data.isActive]);
         res.status(201).json({message:"Saved successfully"});
         //res.status(201).json(data[0]);
     }catch(error){

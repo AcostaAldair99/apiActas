@@ -80,3 +80,49 @@ export const updateCeremony =  async(req,res) => {
         res.status(500).json(err);
     }
 }
+
+
+
+export const addTelephone = async (req,res) => {
+    const sql = "INSERT INTO sinoidales_phones SET id_sinoidal = (SELECT id_sinoidales FROM sinoidales WHERE is_sinoidales = ?), phone = ?";
+    var [data] = req.body;
+    try{
+        const [review] = pool.query(sql,[req.params.idSinoidal,data.phone]);
+        if(review.affectedRows === 0)res.status(404).json({message:"id sinoidal not found"});
+        res.status(201).json({message:"Phone added successfully"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+export const getTelephones =  async(req,res) => {
+    try{
+    const [respon] = await pool.query("SELECT * FROM sinoidales_phones WHERE id_sinoidal=?",[req.params.idSinoidal]);
+    res.json(respon);
+        
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+export const  addEmail= async (req,res) => {
+    const sql = "INSERT INTO sinoidales_emails SET id_sinoidal = (SELECT id_sinoidales FROM sinoidales WHERE is_sinoidales = ?), email = ?";
+    var [data] = req.body;
+    try{
+        const [review] = pool.query(sql,[req.params.idSinoidal,data.email]);
+        if(review.affectedRows === 0)res.status(404).json({message:"id sinoidal not found"});
+        res.status(201).json({message:"Email added successfully"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+export const getEmails=  async(req,res) => {
+    try{
+    const [respon] = await pool.query("SELECT * FROM sinoidales_emails WHERE id_sinoidal=?",[req.params.idSinoidal]);
+    res.json(respon);
+        
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}

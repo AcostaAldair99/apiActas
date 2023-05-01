@@ -15,5 +15,10 @@ router.get("/ceremonies",verifyToken,commonControllers.getCeremonies);
 router.put("/ceremonies/:id_ceremony",verifyToken,commonControllers.updateCeremony);
 router.post("/ceremonies",verifyToken,commonControllers.createCeremony);
 
+router.post("/sinoidales/addEmail/:idSinoidal",verifyToken,commonControllers.addEmail);
+router.post("/sinoidales/addPhone/:idSinoidal",verifyToken,commonControllers.addTelephone);
+router.get("/sinoidales/emails/:idSinoidal",verifyToken,commonControllers.getEmails);
+router.get("/sinoidales/phones/:idSinoidal",verifyToken,commonControllers.getTelephones);
+
 
 export default router;

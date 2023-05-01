@@ -40,13 +40,13 @@ export const updateActa = async (req,res) =>{
 }
 
 export const updateSinoidalActa = async (req,res) =>{
-    const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_sinoidales_fk` = ?"
+    const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_register`=?"
     var data=req.body;
-    const {idActa,idSinoidal}=req.params;
+    const {idActa}=req.params;
     try{
-        const [qe]= await pool.query(sql,[data.id_sinoidales,idActa,idSinoidal]);
+        const [qe]= await pool.query(sql,[data.idSinoidal,req.params.idActa,data.idRegister]);
         if(qe.affectedRows === 0 )return res.status(404).json({message:"Id Acta not Found"});
-        res.status(200).json({message:"Register Updated successfully"});
+        res.status(201).json({message:"Register Updated successfully"});
     }catch(err){
         res.status(500).json(err);
     }
