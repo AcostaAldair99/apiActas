@@ -19,6 +19,8 @@ router.post("/sinoidales/addEmail/:idSinoidal",verifyToken,commonControllers.add
 router.post("/sinoidales/addPhone/:idSinoidal",verifyToken,commonControllers.addTelephone);
 router.get("/sinoidales/emails/:idSinoidal",verifyToken,commonControllers.getEmails);
 router.get("/sinoidales/phones/:idSinoidal",verifyToken,commonControllers.getTelephones);
+router.delete("/sinoidales/phones/delete/:idSinoidal",verifyToken,commonControllers.deleteTelephones);
+router.delete("/sinoidales/emails/delete/:idSinoidal",verifyToken,commonControllers.deleteEmails);
 
 
 export default router;

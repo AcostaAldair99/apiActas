@@ -9,4 +9,5 @@ router.put("/sinoidales/isActive/:idSinoidal",verifyToken,sinoidalesController.d
 router.put("/sinoidales/:id_sinoidal",verifyToken,sinoidalesController.updateSinoidal);
 router.post("/sinoidales",verifyToken,sinoidalesController.createSinoidal);
 router.get("/sinoidales/search/:idSinoidal",verifyToken,sinoidalesController.getSinoidalById);
+router.delete("/sinoidales/delete/:idSinoidal",verifyToken,sinoidalesController.deleteSinoidal);
 export default router;
