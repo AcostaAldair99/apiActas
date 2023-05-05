@@ -16,6 +16,19 @@ export const createActa = async (req,res)=>{
     }
 }
 
+export const addSignatureToActa = async(req,res) =>{
+    var sql ="UPDATE actas SET signatures = ? WHERE id_actas=?";
+    const {idActa,Signatures}=req.params;
+    try{
+        const quer = await pool.query(sql,[Signatures,idActa]);
+        console.log(quer);
+        if(quer.affectedRows===0)res.status(404).json({message:"Acta not found"});
+        res.status(201).json({message:"Acta Signatures updated successfully!"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
 export const addSinoidalesActa = (req,res) =>{
     const sql = "INSERT INTO actas_sinoidales SET id_ceremony=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), id_actas_fk=(SELECT id_actas FROM actas WHERE id_actas=?),id_sinoidales_fk=(SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?),signed=0"
     const {idActa,idCeremony,idSinoidal}=req.params;

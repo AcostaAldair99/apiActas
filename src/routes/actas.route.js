@@ -8,6 +8,7 @@ router.get("/certificates",verifyToken,actasController.getActas);
 router.post("/certificates",verifyToken,actasController.createActa);
 router.put("/certificates/updateActasSignatures/:idActa/:idSinoidal",verifyToken,actasController.updateActaSignatures);
 router.put("/certificates/updateActa/:idActa",verifyToken,actasController.updateActa);
+router.put("/certificates/updateActa/addSignature/:idActa/:Signatures",verifyToken,actasController.addSignatureToActa);
 router.delete("/certificates/:idActa",verifyToken,actasController.deleteActaById);
 //router.get("/certificates/search/:idActa",verifyToken,actasController.searchActaById);
 
