@@ -17,7 +17,7 @@ export const createActa = async (req,res)=>{
 }
 
 export const addSinoidalesActa = (req,res) =>{
-    const sql = "INSERT INTO actas_sinoidales SET id_ceremony=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), id_actas_fk=(SELECT id_actas FROM actas WHERE id_actas=?),id_sinoidales_fk=(SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?)"
+    const sql = "INSERT INTO actas_sinoidales SET id_ceremony=(SELECT id_ceremony FROM ceremony WHERE id_ceremony=?), date_fk=(SELECT date FROM ceremony WHERE id_ceremony=?), id_actas_fk=(SELECT id_actas FROM actas WHERE id_actas=?),id_sinoidales_fk=(SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?),signed=0"
     const {idActa,idCeremony,idSinoidal}=req.params;
     try{
         const quer=pool.query(sql,[idCeremony,idCeremony,idActa,idSinoidal]);
@@ -40,9 +40,8 @@ export const updateActa = async (req,res) =>{
 }
 
 export const updateSinoidalActa = async (req,res) =>{
-    const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_register`=?"
+    const sql="UPDATE `actas_sinoidales` SET `id_sinoidales_fk` = (SELECT id_sinoidales FROM sinoidales WHERE id_sinoidales=?) WHERE `id_actas_fk` = ? AND `id_register`=? AND `signed`=0"
     var data=req.body;
-    const {idActa}=req.params;
     try{
         const [qe]= await pool.query(sql,[data.idSinoidal,req.params.idActa,data.idRegister]);
         if(qe.affectedRows === 0 )return res.status(404).json({message:"Id Acta not Found"});
@@ -58,13 +57,14 @@ export const getActasSinoidales = async(req,res) =>{
     res.json(resp);
 }
 
-export const getActasSinoidalesById = async(req,res) =>{
+export const getActasSinoidalesByActa = async(req,res) =>{
     const {idActa}=req.params;
     console.log(idActa);
     const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_actas_fk=?",[idActa]);
     if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
     res.status(201).json(resp);
 }
+
 
 
 export const getActasSinoidalesBySinoidal = async(req,res) =>{
@@ -74,6 +74,17 @@ export const getActasSinoidalesBySinoidal = async(req,res) =>{
     res.json(resp);
 }
 
+export const getSignedFromActasSinoidales = async(req,res) =>{
+    const {idActa,idSinoidal} = req.params;
+    try{
+        const [resp] = await pool.query("SELECT `signed` FROM actas_sinoidales WHERE id_sinoidales_fk = ? AND id_actas_fk=?",[idSinoidal,idActa]);
+        if(resp.affectedRows === 0)res.status(404).json({message:"Indexes not found"});
+        res.status(201).json(resp);
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
 export const getActas = async(req,res)=>{
     const [respon]=await pool.query("SELECT * FROM actas");
     if(respon.length === 0 )return res.status(404).json({message:"Are not Actas Registered"});
@@ -81,10 +92,10 @@ export const getActas = async(req,res)=>{
 };
 
 export const updateActaSignatures = async(req,res)=>{
-    const sql="UPDATE `actas` SET `signatures` = signatures + 1 WHERE id_actas=?";
-    const {idActa}=req.params;
+    const sql="UPDATE `actas_sinoidales` SET `signed` = 1 WHERE `id_actas_fk`=? AND `id_sinoidales_fk`=?";
+    const {idActa,idSinoidal}=req.params;
     try{
-        const [val]= await pool.query(sql,[idActa]);
+        const val= await pool.query(sql,[idActa,idSinoidal]);
         if(val.affectedRows===0)return res.status(404).json({message:"Acta not found"});
         res.status(201).json({message:"Acta updated Successfully a sinoidal got signed the acta"});
     }catch(err){
@@ -105,7 +116,7 @@ export const deleteActaById = async (req,res)=>{
 
 export const deleteActaSinoidales = async (req,res) =>{
     try{
-        const [data] =  await pool.query("DELETE FROM actas_sinoidales WHERE id_actas_fk=?",[req.params.idActa]);
+        const data =  await pool.query("DELETE FROM `actas_sinoidales` WHERE `id_actas_fk`=? AND `signed`=0",[req.params.idActa]);
         if(data.affectedRows === 0 )res.status(404).json({message:"ACTA NOT FOUND"})    
         res.status(201).json({message:"Acta deleted successfully"});
     }catch(err){
