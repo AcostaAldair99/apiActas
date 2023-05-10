@@ -42,7 +42,6 @@ export const addFolder = async(req,res)=>{
 
 export const deleteFolder = async(req,res)=>{
     const {id_folder}=req.params.id_folder;
-    console.log(id_folder);
     try{
         const [respon]=await pool.query("DELETE FROM `folder` WHERE `id_folder`=?",[id_folder]);
         if(respon.affectedRows <= 0)return res.status(404).json({message:"Folder not found"});

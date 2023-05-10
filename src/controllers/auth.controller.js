@@ -18,3 +18,15 @@ export const signIn = async(req,res)=>{
 }
 
 
+export const isSignin = async (req,res) =>{
+    console.log(req.body.pass+"-"+req.body.user);
+    try{
+        const [data] =  await pool.query("SELECT user FROM `users` WHERE `pass` = ? AND `user`=?",[req.body.pass,req.body.user]);
+        if(data.length === 0)return res.status(404).json({message:"user not found"});
+        res.status(201).json({message:"auth"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+
