@@ -72,7 +72,6 @@ export const getActasSinoidales = async(req,res) =>{
 
 export const getActasSinoidalesByActa = async(req,res) =>{
     const {idActa}=req.params;
-    console.log(idActa);
     const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_actas_fk=?",[idActa]);
     if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
     res.status(201).json(resp);
@@ -138,5 +137,15 @@ export const deleteActaSinoidales = async (req,res) =>{
            
 }      
         
-
+export const getCountFirmasBySinoidal = async (req,res) =>{
+    const {idSinodal} = req.params;
+    const sql = "SELECT COUNT(*) FROM `actas_sinoidales` WHERE `id_sinoidales_fk` = ? AND `signed`=1";
+    try{
+        const [query] = await pool.query(sql,[idSinodal]);
+        if(query.affectedRows === 0 )res.status(404).json({message:"Sinodal not Found"});
+        res.status(201).json(query);
+    }catch(err){
+       res.status(500).json({message:err});
+   }
+}
 

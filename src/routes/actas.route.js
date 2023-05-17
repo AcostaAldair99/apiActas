@@ -19,5 +19,5 @@ router.get("/certificates/reports",verifyToken,actasController.getActasSinoidale
 router.get("/certificates/actasSinoidales/:idActa",verifyToken,actasController.getActasSinoidalesByActa);
 router.get("/certificates/actasSinoidales/:idActa/:idSinoidal",verifyToken,actasController.getSignedFromActasSinoidales);
 router.delete("/certificates/actasSinoidales/delete/:idActa",verifyToken,actasController.deleteActaSinoidales);
-
+router.get("/certificates/signed/:idSinodal",verifyToken,actasController.getCountFirmasBySinoidal);
 export default router;
