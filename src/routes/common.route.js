@@ -17,7 +17,9 @@ router.post("/ceremonies",verifyToken,commonControllers.createCeremony);
 
 router.post("/sinoidales/addEmail/:idSinoidal",verifyToken,commonControllers.addEmail);
 router.post("/sinoidales/addPhone/:idSinoidal",verifyToken,commonControllers.addTelephone);
+router.get("/sinoidales/phone/:id",verifyToken,commonControllers.getTelephone);
 router.get("/sinoidales/emails/:idSinoidal",verifyToken,commonControllers.getEmails);
+router.get("/sinoidales/email/:id",verifyToken,commonControllers.getEmail);
 router.get("/sinoidales/phones/:idSinoidal",verifyToken,commonControllers.getTelephones);
 router.delete("/sinoidales/phones/delete/:idSinoidal",verifyToken,commonControllers.deleteTelephones);
 router.delete("/sinoidales/emails/delete/:idSinoidal",verifyToken,commonControllers.deleteEmails);

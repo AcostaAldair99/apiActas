@@ -104,6 +104,18 @@ export const getTelephones =  async(req,res) => {
     }
 }
 
+export const getTelephone = async(req,res) => {
+    const {id} = req.params;
+    try{
+        const [respon] = await pool.query("SELECT telephone FROM sinoidales_phones WHERE id_sinoidal=? LIMIT 1",[id]);
+        if(respon.length===0)res.status(404).json({message:"Acta not found"});
+        res.status(201).json(respon);
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+
 export const deleteTelephones = async (req,res) =>{
     var sql = "DELETE FROM sinoidales_phones WHERE id_sinoidal=?";
     var data=req.params;
@@ -123,6 +135,17 @@ export const  addEmail= async (req,res) => {
         const [review] = await pool.query(sql,[req.params.idSinoidal,data.email]);
         if(review.affectedRows === 0)res.status(404).json({message:"id sinoidal not found"});
         res.status(201).json({message:"Email added successfully"});
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
+export const getEmail = async (req,res) =>{
+    const {id} = req.params;
+    try{
+        const [data] = await pool.query("SELECT email FROM sinoidales_emails WHERE id_sinoidal=? LIMIT 1",[id]);
+        if(data.length===0)res.status(404).json({message:"sinoidal not found"});
+        res.status(201).json(data);
     }catch(err){
         res.status(500).json({message:err});
     }

@@ -16,6 +16,18 @@ export const createActa = async (req,res)=>{
     }
 }
 
+export const getActaById = async (req,res) =>{
+    var sql = "SELECT * FROM actas WHERE id_actas=?";
+    const {id} = req.params;
+    try{
+        const [data] = await pool.query(sql,[id]);
+        if(data.length===0)res.status(404).json({message:"acta not found"});
+        res.status(201).json(data);
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
 export const addSignatureToActa = async(req,res) =>{
     var sql ="UPDATE actas SET signatures = ? WHERE id_actas=?";
     const {idActa,Signatures}=req.params;
@@ -80,10 +92,11 @@ export const getActasSinoidalesByActa = async(req,res) =>{
 
 
 export const getActasSinoidalesBySinoidal = async(req,res) =>{
-    const {idSinoidal}=req.params;
-    const [resp]=await pool.query("SELECT * FROM actas_sinoidales WHERE id_sinoidal_fk=?",[idSinoidal]);
+    const {idSinodal}=req.params;
+    console.log(idSinodal);
+    const [resp]=await pool.query("SELECT * FROM `actas_sinoidales` WHERE `id_sinoidales_fk`=?",[idSinodal]);
     if(resp.length === 0)return res.status(404).json({message:"Acta not found"});
-    res.json(resp);
+    res.status(201).json(resp);
 }
 
 export const getSignedFromActasSinoidales = async(req,res) =>{
