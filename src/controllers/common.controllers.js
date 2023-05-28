@@ -7,10 +7,9 @@ export const getFolders = async(req,res)=>{
 };
 
 export const updateCaseFolder =  async(req,res)=>{
-    const {id_folder}=req.params;
-    const data=req.body;
+    const {idFolder,idCase}=req.params;
     try{
-        const [respon] =  await pool.query("UPDATE `folder` SET `id_case` = ? WHERE `id_folder` = ?",[data.case,id_folder]);        
+        const [respon] =  await pool.query("UPDATE `folder` SET `id_case` = ? WHERE `id_folder` = ?",[idCase,idFolder]);        
         if(respon.affectedRows === 0)return res.status(404).json({message:"Folder not found"});
         res.status(201).json({message: "Folder updated successfully"});
     }catch(err){
@@ -29,6 +28,20 @@ export const addActaToFolder = async(req,res) =>{
     }
 }
 
+export const getCountActasFolder = async(req,res) =>{
+    const {idFolder} =  req.params;
+    try{
+        const [response] = await pool.query("SELECT COUNT(*) FROM actas WHERE id_Folder_fk=?",[idFolder]);
+        if(response.length === 0 )return res.status(404).json({message:"Folder not found"});
+        res.status(201).json(response);
+
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+    
+
+
 export const addFolder = async(req,res)=>{
     var sql="INSERT INTO `folder` (`id_case`,`actas_num`) VALUES (?,?)"
     var data=req.body;
@@ -41,10 +54,10 @@ export const addFolder = async(req,res)=>{
 }
 
 export const deleteFolder = async(req,res)=>{
-    const {id_folder}=req.params.id_folder;
+    const {id_folder}=req.params;
     try{
         const [respon]=await pool.query("DELETE FROM `folder` WHERE `id_folder`=?",[id_folder]);
-        if(respon.affectedRows <= 0)return res.status(404).json({message:"Folder not found"});
+        if(respon.affectedRows === 0)return res.status(404).json({message:"Folder not found"});
         res.status(201).json({message:"Folder deleted successfully"});
     }catch(err){
         res.status(500).json(err);
@@ -80,6 +93,16 @@ export const updateCeremony =  async(req,res) => {
     }
 }
 
+export const deleteCeremony = async (req,res) =>{
+    const {idCeremony} = req.params;
+    try{
+        const [respon] = await pool.query("DELETE FROM `ceremony` WHERE `id_ceremony`=?",[idCeremony]);
+        if(respon.affectedRows === 0)return res.status(404).json({message:"Ceremony not found"});
+        res.status(201).jsos({message:"Ceremony deleted successfully"});
+    }catch(Err){
+        res.status(500).json({message:Err});
+    }
+}
 
 
 export const addTelephone = async (req,res) => {
