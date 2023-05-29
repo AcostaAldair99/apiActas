@@ -11,11 +11,13 @@ router.post("/folders",verifyToken,commonControllers.addFolder);
 router.delete("/folders/:id_folder",verifyToken,commonControllers.deleteFolder);
 router.put("/folders/addActa/:id_folder",verifyToken,commonControllers.addActaToFolder);
 router.get("/folder/count/:idFolder",commonControllers.getCountActasFolder);
+router.get("/folder/stand/:idFolder",commonControllers.getEstante);
 
 router.get("/ceremonies",verifyToken,commonControllers.getCeremonies);
 router.put("/ceremonies/:id_ceremony",verifyToken,commonControllers.updateCeremony);
 router.post("/ceremonies",verifyToken,commonControllers.createCeremony);
-router.delete("/ceremonies/:idFolder",verifyToken,commonControllers.deleteCeremony);
+router.delete("/ceremonies/:idCeremony",verifyToken,commonControllers.deleteCeremony);
+router.get("/ceremonies/gotAsigned/:idCeremony",verifyToken,commonControllers.gotAsignActas);
 
 router.post("/sinoidales/addEmail/:idSinoidal",verifyToken,commonControllers.addEmail);
 router.post("/sinoidales/addPhone/:idSinoidal",verifyToken,commonControllers.addTelephone);

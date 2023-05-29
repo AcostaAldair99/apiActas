@@ -6,6 +6,17 @@ export const getFolders = async(req,res)=>{
     res.json(respon);
 };
 
+export const getEstante = async(req,res)=>{
+    const {idFolder} = req.params;
+    try{
+        const [respon] = await pool.query("SELECT `id_case` FROM `folder` WHERE `id_folder`=?",[idFolder]);
+        if(respon.affectedRows === 0)return res.status(404).json({message:"folder not found"});
+        res.status(201).json(respon);
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
 export const updateCaseFolder =  async(req,res)=>{
     const {idFolder,idCase}=req.params;
     try{
@@ -93,16 +104,28 @@ export const updateCeremony =  async(req,res) => {
     }
 }
 
+export const gotAsignActas = async(req,res) =>{
+    const {idCeremony} = req.params;
+    try{
+        const [respon] = await pool.query("SELECT COUNT(*) FROM actas WHERE id_ceremony_fk = ? AND signatures = 3",[idCeremony]);
+        if(respon.affectedRows === 0)return res.status(404).json({message:"Not found data"});
+        res.status(201).json(respon);
+    }catch(err){
+        res.status(500).json({message:err});
+    }
+}
+
 export const deleteCeremony = async (req,res) =>{
     const {idCeremony} = req.params;
     try{
         const [respon] = await pool.query("DELETE FROM `ceremony` WHERE `id_ceremony`=?",[idCeremony]);
         if(respon.affectedRows === 0)return res.status(404).json({message:"Ceremony not found"});
-        res.status(201).jsos({message:"Ceremony deleted successfully"});
+        res.status(201).json({message:"Ceremony deleted successfully"});
     }catch(Err){
         res.status(500).json({message:Err});
     }
 }
+
 
 
 export const addTelephone = async (req,res) => {
