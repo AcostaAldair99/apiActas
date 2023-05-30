@@ -45,7 +45,6 @@ export const getCountActasFolder = async(req,res) =>{
         const [response] = await pool.query("SELECT COUNT(*) FROM actas WHERE id_Folder_fk=?",[idFolder]);
         if(response.length === 0 )return res.status(404).json({message:"Folder not found"});
         res.status(201).json(response);
-
     }catch(err){
         res.status(500).json({message:err});
     }
@@ -170,7 +169,7 @@ export const deleteTelephones = async (req,res) =>{
         if(get.affectedRows === 0)res.status(404).json({message:"Sinoidal not found"});
         res.status(201).json({message:"Phone deleted successfully"});
     }catch(err){
-        req.status(500).json({message:err});
+        res.status(500).json({message:err});
     }
 }
 
